@@ -1,1 +1,1 @@
-export const triggerDeploy = true;
+export const triggerDeploy = !true;

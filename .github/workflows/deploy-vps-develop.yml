@@ -2,7 +2,8 @@ name: s3.jjuidev.com - Host S3 by MinIO deployment to VPS
 
 on:
   push:
-    branches: ['develop']
+    branches:
+      - deploy-develop
 
 jobs:
   deploy-develop:
@@ -23,10 +24,8 @@ jobs:
         env:
           MINIO_ROOT_USER: ${{ secrets.MINIO_ROOT_USER }}
           MINIO_ROOT_PASSWORD: ${{ secrets.MINIO_ROOT_PASSWORD }}
-          MINIO_PORT: ${{ secrets.MINIO_PORT }}
-          MINIO_HOST_PORT: ${{ secrets.MINIO_HOST_PORT }}
-          MINIO_CONSOLE_PORT: ${{ secrets.MINIO_CONSOLE_PORT }}
-          MINIO_CONSOLE_HOST_PORT: ${{ secrets.MINIO_CONSOLE_HOST_PORT }}
+          PORT: ${{ secrets.PORT }}
+          CONSOLE_PORT: ${{ secrets.CONSOLE_PORT }}
         run: |
           # generate docker/.env from template using envsubst
           envsubst < docker/.env.template > docker/.env
@@ -34,10 +33,10 @@ jobs:
       - name: Update repository on VPS
         uses: appleboy/ssh-action@master
         with:
-          host: ${{ secrets.VPS_HOST }}
-          port: ${{ secrets.VPS_SSH_PORT }}
-          username: ${{ secrets.VPS_USERNAME }}
-          key: ${{ secrets.VPS_SSH_KEY }}
+          host: ${{ secrets.VPS_JJUIDEV_2230_HOST }}
+          port: ${{ secrets.VPS_JJUIDEV_2230_PORT }}
+          username: ${{ secrets.VPS_JJUIDEV_2230_USERNAME }}
+          key: ${{ secrets.VPS_JJUIDEV_2230_SSH_KEY }}
           script: |
             ssh-keyscan -H github.com >> ~/.ssh/known_hosts
 
@@ -54,7 +53,7 @@ jobs:
               git checkout develop
             else
               echo "Repository not found → cloning"
-              git clone -b develop git@github.com-jjuidev:jjuidev-vps/minio.git minio || exit 1
+              git clone -b develop git@github.com-jjuidev:jjuidev-vps/minio.git || exit 1
               cd minio
               
               git config pull.rebase false
@@ -65,25 +64,31 @@ jobs:
       - name: Copy docker environment file to VPS
         uses: appleboy/scp-action@master
         with:
-          host: ${{ secrets.VPS_HOST }}
-          port: ${{ secrets.VPS_SSH_PORT }}
-          username: ${{ secrets.VPS_USERNAME }}
-          key: ${{ secrets.VPS_SSH_KEY }}
+          host: ${{ secrets.VPS_JJUIDEV_2230_HOST }}
+          port: ${{ secrets.VPS_JJUIDEV_2230_PORT }}
+          username: ${{ secrets.VPS_JJUIDEV_2230_USERNAME }}
+          key: ${{ secrets.VPS_JJUIDEV_2230_SSH_KEY }}
           source: 'docker/.env'
           target: '/home/jjuidev/jjuidev-vps/minio'
 
       - name: Start MinIO Docker containers and cleanup environment file
         uses: appleboy/ssh-action@master
         with:
-          host: ${{ secrets.VPS_HOST }}
-          port: ${{ secrets.VPS_SSH_PORT }}
-          username: ${{ secrets.VPS_USERNAME }}
-          key: ${{ secrets.VPS_SSH_KEY }}
+          host: ${{ secrets.VPS_JJUIDEV_2230_HOST }}
+          port: ${{ secrets.VPS_JJUIDEV_2230_PORT }}
+          username: ${{ secrets.VPS_JJUIDEV_2230_USERNAME }}
+          key: ${{ secrets.VPS_JJUIDEV_2230_SSH_KEY }}
           script: |
             cd /home/jjuidev/jjuidev-vps/minio || exit 1
             chmod 600 docker/.env
 
-            docker compose -f docker/docker-compose.yml down --remove-orphans
-            docker compose -f docker/docker-compose.yml up -d
+            # Login to Docker Hub if credentials are provided
+            if [ -n "${{ secrets.DOCKER_HUB_USERNAME }}" ] && [ -n "${{ secrets.DOCKER_HUB_TOKEN }}" ]; then
+              echo "${{ secrets.DOCKER_HUB_TOKEN }}" | docker login -u "${{ secrets.DOCKER_HUB_USERNAME }}" --password-stdin
+            fi
+
+            docker compose -f docker/docker-compose.yml pull
+            docker compose -f docker/docker-compose.yml down
+            docker compose -f docker/docker-compose.yml up -d --remove-orphans
 
             rm -f docker/.env

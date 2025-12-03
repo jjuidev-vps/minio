@@ -1,0 +1,39 @@
+{
+  "name": "minio",
+  "version": "1.0.0",
+  "license": "MIT",
+  "author": "jjuidev <jjuidev@gmail.com>",
+  "repository": "git@github.com-jjuidev:jjuidev-vps/minio.git",
+  "main": "index.js",
+  "scripts": {
+    "deploy": "scripts/deploy.sh",
+    "format": "eslint --fix \"src/**/*.{js,ts,jsx,tsx}\" && prettier --write \"src/**/*.{js,ts,jsx,tsx}\"",
+    "prepare": "husky"
+  },
+  "devDependencies": {
+    "@commitlint/cli": "^20.2.0",
+    "@commitlint/config-conventional": "^20.2.0",
+    "@eslint/js": "^9.39.1",
+    "@jjuidev/node-devtools": "^1.5.2",
+    "eslint": "^9.39.1",
+    "eslint-config-prettier": "^10.1.8",
+    "eslint-plugin-autofix": "^2.2.0",
+    "eslint-plugin-import": "^2.32.0",
+    "eslint-plugin-prefer-arrow-functions": "^3.9.1",
+    "globals": "^16.5.0",
+    "husky": "^9.1.7",
+    "lint-staged": "^16.2.7",
+    "prettier": "^3.7.4",
+    "typescript": "^5.9.3",
+    "typescript-eslint": "^8.48.1"
+  },
+  "lint-staged": {
+    "*.{js,ts,jsx,tsx}": [
+      "eslint --fix",
+      "prettier --write"
+    ],
+    "package.json": [
+      "npx prettier-package-json --write"
+    ]
+  }
+}

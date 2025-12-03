@@ -35,3 +35,6 @@ Desktop.ini
 .env*
 !.env.example
 !.env.template
+
+# typescript
+*.tsbuildinfo
