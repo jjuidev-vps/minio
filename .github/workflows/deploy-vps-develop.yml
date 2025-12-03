@@ -23,10 +23,10 @@ jobs:
         env:
           MINIO_ROOT_USER: ${{ secrets.MINIO_ROOT_USER }}
           MINIO_ROOT_PASSWORD: ${{ secrets.MINIO_ROOT_PASSWORD }}
-          MINIO_PORT: ${{ secrets.MINIO_PORT }}
-          MINIO_HOST_PORT: ${{ secrets.MINIO_HOST_PORT }}
-          MINIO_CONSOLE_PORT: ${{ secrets.MINIO_CONSOLE_PORT }}
-          MINIO_CONSOLE_HOST_PORT: ${{ secrets.MINIO_CONSOLE_HOST_PORT }}
+          PORT: ${{ secrets.PORT }}
+          PORT_HOST: ${{ secrets.PORT_HOST }}
+          CONSOLE_PORT: ${{ secrets.CONSOLE_PORT }}
+          CONSOLE_PORT_HOST: ${{ secrets.CONSOLE_PORT_HOST }}
         run: |
           # generate docker/.env from template using envsubst
           envsubst < docker/.env.template > docker/.env
@@ -54,7 +54,7 @@ jobs:
               git checkout develop
             else
               echo "Repository not found → cloning"
-              git clone -b develop git@github.com-jjuidev:jjuidev-vps/minio.git minio || exit 1
+              git clone -b develop git@github.com-jjuidev:jjuidev-vps/minio.git || exit 1
               cd minio
               
               git config pull.rebase false
