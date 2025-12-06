@@ -87,8 +87,8 @@ jobs:
               echo "${{ secrets.DOCKER_HUB_TOKEN }}" | docker login -u "${{ secrets.DOCKER_HUB_USERNAME }}" --password-stdin
             fi
 
-            docker compose -f docker/docker-compose.yml -p minio pull
-            docker compose -f docker/docker-compose.yml -p minio down
-            docker compose -f docker/docker-compose.yml -p minio up -d --remove-orphans
+            docker compose -f docker/docker-compose.yml pull
+            docker compose -f docker/docker-compose.yml down
+            docker compose -f docker/docker-compose.yml up -d --remove-orphans
 
             rm -f docker/.env
