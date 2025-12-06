@@ -1,12 +1,8 @@
 volumes:
   minio_data:
-    name: minio_data
-    driver: local
 
 networks:
   minio_net:
-    name: minio_net
-    driver: bridge
 
 services:
   minio:
