@@ -262,10 +262,10 @@
   resolved "https://registry.yarnpkg.com/@humanwhocodes/retry/-/retry-0.4.3.tgz#c2b9d2e374ee62c586d3adbea87199b1d7a7a6ba"
   integrity sha512-bV0Tgo9K4hfPCek+aMAn81RppFKv2ySDQeMoSZuvTASywNTnVJCArCZE2FWqpvIatKu7VMRLWlR1EazvVhDyhQ==
 
-"@jjuidev/node-devtools@^1.5.2":
-  version "1.5.2"
-  resolved "https://registry.yarnpkg.com/@jjuidev/node-devtools/-/node-devtools-1.5.2.tgz#e3494824e5d7d9d6a2422a70304d112d65ab2ea1"
-  integrity sha512-qJIkn8TEhUd9Zb/whg4ecwMhjy/JBjcnJ9eTUAD26FMQJynNW6/f+bXINTOKV+AouAR1LkovNhCbVJx29XhYcA==
+"@jjuidev/node-devtools@^1.5.6":
+  version "1.5.6"
+  resolved "https://registry.yarnpkg.com/@jjuidev/node-devtools/-/node-devtools-1.5.6.tgz#315e406c5720584687449d4705eb8859c8c7d83d"
+  integrity sha512-S1mJrAXGPUJjCaVutQErHlKmXVAbxf4PR1VvKjHFJHraNklmwLZZUHoHh8WHQc2YxVAw0VzEJl2D8FwTEe/22g==
   dependencies:
     commander "^14.0.2"
     consola "^3.4.2"

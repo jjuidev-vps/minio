@@ -14,7 +14,7 @@
     "@commitlint/cli": "^20.2.0",
     "@commitlint/config-conventional": "^20.2.0",
     "@eslint/js": "^9.39.1",
-    "@jjuidev/node-devtools": "^1.5.2",
+    "@jjuidev/node-devtools": "^1.5.6",
     "eslint": "^9.39.1",
     "eslint-config-prettier": "^10.1.8",
     "eslint-plugin-autofix": "^2.2.0",
