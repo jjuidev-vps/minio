@@ -35,7 +35,7 @@ jobs:
           envsubst < docker/.env.template > docker/.env
 
       - name: Update repository on VPS
-        uses: appleboy/ssh-action@master
+        uses: appleboy/ssh-action@v1
         with:
           host: ${{ secrets.VPS_JJUIDEV_2230_HOST }}
           port: ${{ secrets.VPS_JJUIDEV_2230_PORT }}
@@ -76,7 +76,7 @@ jobs:
           target: '/home/jjuidev/jjuidev-vps/minio'
 
       - name: Start MinIO Docker containers and cleanup environment file
-        uses: appleboy/ssh-action@master
+        uses: appleboy/ssh-action@v1
         with:
           host: ${{ secrets.VPS_JJUIDEV_2230_HOST }}
           port: ${{ secrets.VPS_JJUIDEV_2230_PORT }}
