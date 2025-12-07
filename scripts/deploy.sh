@@ -7,7 +7,6 @@ set -euo pipefail
 # Nếu git current branch có code change thì script tự commit và push, ngược lại chỉ push.
 #
 # Script sẽ push code lên deploy-develop|deploy-production để trigger deploy (github workflow)
-# Build và push Docker images sẽ được thực hiện trên GitHub Actions runner
 #
 
 # Colors for output
