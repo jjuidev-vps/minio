@@ -42,7 +42,7 @@ else
   git commit -m "${commit_message}" >/dev/null 2>&1
 fi
 
-echo -e "${GREEN}✓ Commit created successfully to trigger CI/CD${NC}"
+echo -e "${GREEN}✓ Commit created successfully to trigger CI/CD${NC}" >/dev/null 2>&1
 
 git push -u origin ${CURRENT_BRANCH}
 
