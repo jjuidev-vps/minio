@@ -28,6 +28,9 @@ jobs:
         env:
           MINIO_ROOT_USER: ${{ secrets.MINIO_ROOT_USER }}
           MINIO_ROOT_PASSWORD: ${{ secrets.MINIO_ROOT_PASSWORD }}
+          MINIO_BROWSER_REDIRECT_URL: ${{ secrets.MINIO_BROWSER_REDIRECT_URL }}
+
+          #
           CONTAINER_PORT: ${{ secrets.CONTAINER_PORT }}
           CONTAINER_CONSOLE_PORT: ${{ secrets.CONTAINER_CONSOLE_PORT }}
         run: |
