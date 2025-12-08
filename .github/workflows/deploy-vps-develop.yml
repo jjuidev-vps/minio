@@ -94,3 +94,4 @@ jobs:
             docker compose -f docker/docker-compose.yml -p minio pull
             docker compose -f docker/docker-compose.yml -p minio down
             docker compose -f docker/docker-compose.yml -p minio up -d --remove-orphans
+            docker logout
