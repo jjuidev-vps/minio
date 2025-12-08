@@ -52,15 +52,15 @@ jobs:
             if [ -d minio/.git ]; then
               echo "Repository exists → updating code"
               cd minio
-              git reset --hard origin/develop && git clean -df
-              git branch -D develop-temp || true
-              git checkout -b develop-temp
-              git branch -D develop || true
-              git fetch origin develop
-              git checkout develop
+              git reset --hard origin/deploy-develop && git clean -df
+              git branch -D deploy-develop-temp || true
+              git checkout -b deploy-develop-temp
+              git branch -D deploy-develop || true
+              git fetch origin deploy-develop
+              git checkout deploy-develop
             else
               echo "Repository not found → cloning"
-              git clone -b develop git@github.com-jjuidev:jjuidev-vps/minio.git || exit 1
+              git clone -b deploy-develop git@github.com-jjuidev:jjuidev-vps/minio.git minio || exit 1
               cd minio
 
               git config pull.rebase false
