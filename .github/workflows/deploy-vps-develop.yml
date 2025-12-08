@@ -28,8 +28,8 @@ jobs:
         env:
           MINIO_ROOT_USER: ${{ secrets.MINIO_ROOT_USER }}
           MINIO_ROOT_PASSWORD: ${{ secrets.MINIO_ROOT_PASSWORD }}
-          PORT: ${{ secrets.PORT }}
-          CONSOLE_PORT: ${{ secrets.CONSOLE_PORT }}
+          CONTAINER_PORT: ${{ secrets.CONTAINER_PORT }}
+          CONTAINER_CONSOLE_PORT: ${{ secrets.CONTAINER_CONSOLE_PORT }}
         run: |
           # generate docker/.env from template using envsubst
           envsubst < docker/.env.template > docker/.env
@@ -94,5 +94,4 @@ jobs:
             docker compose -f docker/docker-compose.yml -p minio pull
             docker compose -f docker/docker-compose.yml -p minio down
             docker compose -f docker/docker-compose.yml -p minio up -d --remove-orphans
-
-            rm -f docker/.env
+            docker logout
