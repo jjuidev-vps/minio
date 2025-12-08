@@ -6,7 +6,8 @@
   "repository": "git@github.com-jjuidev:jjuidev-vps/minio.git",
   "main": "index.js",
   "scripts": {
-    "deploy": "scripts/deploy.sh",
+    "deploy:develop": "sh scripts/deploy.sh develop",
+    "deploy:production": "sh scripts/deploy.sh production",
     "format": "eslint --fix \"src/**/*.{js,ts,jsx,tsx}\" && prettier --write \"src/**/*.{js,ts,jsx,tsx}\"",
     "prepare": "husky"
   },

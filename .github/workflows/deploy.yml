@@ -1,23 +1,23 @@
-name: s3.jjuidev.com - Host S3 by MinIO deployment to VPS
+name: Deployment s3.jjuidev.com/minio by MinIO
 
 on:
   push:
     branches:
-      - deploy-develop
+      - develop
+      - production
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
   cancel-in-progress: true
 
 jobs:
-  deploy-develop:
+  deploy:
     runs-on: ubuntu-latest
-    environment: develop
+    environment: ${{ github.ref_name }}
+    if: ${{ contains(github.event.head_commit.message, format('deploy to {0} - ', github.ref_name)) }}
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v5
-        with:
-          fetch-depth: 1
+        uses: actions/checkout@v6
 
       - name: Install envsubst
         run: |
@@ -28,16 +28,15 @@ jobs:
         env:
           MINIO_ROOT_USER: ${{ secrets.MINIO_ROOT_USER }}
           MINIO_ROOT_PASSWORD: ${{ secrets.MINIO_ROOT_PASSWORD }}
+          MINIO_SERVER_URL: ${{ secrets.MINIO_SERVER_URL }}
           MINIO_BROWSER_REDIRECT_URL: ${{ secrets.MINIO_BROWSER_REDIRECT_URL }}
 
-          #
           CONTAINER_PORT: ${{ secrets.CONTAINER_PORT }}
           CONTAINER_CONSOLE_PORT: ${{ secrets.CONTAINER_CONSOLE_PORT }}
         run: |
-          # generate docker/.env from template using envsubst
           envsubst < docker/.env.template > docker/.env
 
-      - name: Update repository on VPS
+      - name: Update repository
         uses: appleboy/ssh-action@v1
         with:
           host: ${{ secrets.VPS_JJUIDEV_2230_HOST }}
@@ -50,26 +49,24 @@ jobs:
             cd /home/jjuidev/jjuidev-vps || exit 1
 
             if [ -d minio/.git ]; then
-              echo "Repository exists → updating code"
-              cd minio
-              git reset --hard origin/develop && git clean -df
-              git branch -D develop-temp || true
-              git checkout -b develop-temp
-              git branch -D develop || true
-              git fetch origin develop
-              git checkout develop
-            else
-              echo "Repository not found → cloning"
-              git clone -b develop git@github.com-jjuidev:jjuidev-vps/minio.git || exit 1
               cd minio
 
+              git fetch --prune origin ${{ github.ref_name }} >/dev/null 2>&1
+              git reset --hard origin/${{ github.ref_name }} >/dev/null 2>&1
+
+              git branch -D ${{ github.ref_name }} 2>/dev/null || true
+              git checkout -b ${{ github.ref_name }} origin/${{ github.ref_name }} 2>/dev/null || true
+            else
+              git clone -b ${{ github.ref_name }} git@github.com-jjuidev:jjuidev-vps/minio.git minio || exit 1
+              cd minio
+              
               git config pull.rebase false
               git config user.name "jjuidev"
               git config user.email "jjuidev@gmail.com"
             fi
 
-      - name: Copy docker environment file to VPS
-        uses: appleboy/scp-action@master
+      - name: Copy docker environment file
+        uses: appleboy/scp-action@v1
         with:
           host: ${{ secrets.VPS_JJUIDEV_2230_HOST }}
           port: ${{ secrets.VPS_JJUIDEV_2230_PORT }}
@@ -78,7 +75,7 @@ jobs:
           source: 'docker/.env'
           target: '/home/jjuidev/jjuidev-vps/minio'
 
-      - name: Start MinIO Docker containers and cleanup environment file
+      - name: Start Docker containers
         uses: appleboy/ssh-action@v1
         with:
           host: ${{ secrets.VPS_JJUIDEV_2230_HOST }}
@@ -89,12 +86,6 @@ jobs:
             cd /home/jjuidev/jjuidev-vps/minio || exit 1
             chmod 600 docker/.env
 
-            # Login to Docker Hub if credentials are provided
-            if [ -n "${{ secrets.DOCKER_HUB_USERNAME }}" ] && [ -n "${{ secrets.DOCKER_HUB_TOKEN }}" ]; then
-              echo "${{ secrets.DOCKER_HUB_TOKEN }}" | docker login -u "${{ secrets.DOCKER_HUB_USERNAME }}" --password-stdin
-            fi
-
             docker compose -f docker/docker-compose.yml -p minio pull
             docker compose -f docker/docker-compose.yml -p minio down
             docker compose -f docker/docker-compose.yml -p minio up -d --remove-orphans
-            docker logout
