@@ -7,7 +7,7 @@ networks:
 services:
   minio:
     image: minio/minio:latest
-    container_name: jjuidev-vps-minio
+    container_name: minio
     restart: unless-stopped
     networks:
       - minio_net
