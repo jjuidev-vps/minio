@@ -29,6 +29,7 @@ jobs:
           MINIO_ROOT_USER: ${{ secrets.MINIO_ROOT_USER }}
           MINIO_ROOT_PASSWORD: ${{ secrets.MINIO_ROOT_PASSWORD }}
           MINIO_SERVER_URL: ${{ secrets.MINIO_SERVER_URL }}
+          MINIO_BROWSER_REDIRECT: ${{ secrets.MINIO_BROWSER_REDIRECT }}
           MINIO_BROWSER_REDIRECT_URL: ${{ secrets.MINIO_BROWSER_REDIRECT_URL }}
 
           CONTAINER_PORT: ${{ secrets.CONTAINER_PORT }}
